@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+    <head>
+        <title>Любовь Стройнова | Модельер и дизайнер</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="description" content="Любовь Стройнова" />
+        <meta name="keywords" content="Любовь Стройнова"/>
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+    </head>
+    <body>
+		<div class="logo">
+			<a href="/" title="Любовь Стройнова"><img src="images/LubovStroynovaLogo.jpg" alt="Любовь Стройнова" /></a>
+		</div>
+		<div class="wrapper">
+			<h1>Любовь Стройнова</h1>
+			<h2>Модельер и дизайнер</h2>
+		</div>
+		<div id="menu">
+			<ul class="menu_list">
+				<li><a href="/summer2012.html">Лето 2012</a></li>
+				<li><a href="/winter2012.html">Зима 2012</a></li>
+				<li><a href="/summer2013.html">Лето 2013</a></li>
+			</ul>
+		</div>
+		<div id="pxs_container" class="pxs_container">
+			<div class="pxs_bg">
+				<div class="pxs_bg1"></div>
+				<div class="pxs_bg2"></div>
+				<div class="pxs_bg3"></div>
+			</div>
+			<div class="pxs_loading">Загрузка изображений...</div>
+			<div class="pxs_slider_wrapper">
+				<ul class="pxs_slider">
+					<li><img src="images/1.jpg" alt="First Image" /></li>
+					<li><img src="images/2.jpg" alt="Second Image" /></li>
+					<li><img src="images/3.jpg" alt="Third Image" /></li>
+					<li><img src="images/4.jpg" alt="Forth Image" /></li>
+					<li><img src="images/5.jpg" alt="Fifth Image" /></li>
+					<li><img src="images/6.jpg" alt="Sixth Image" /></li>
+				</ul>
+				<div class="pxs_navigation">
+					<span class="pxs_next"></span>
+					<span class="pxs_prev"></span>
+				</div>
+				<ul class="pxs_thumbnails">
+					<li><img src="images/thumbs/1.jpg" alt="First Image" /></li>
+					<li><img src="images/thumbs/2.jpg" alt="Second Image" /></li>
+					<li><img src="images/thumbs/3.jpg" alt="Third Image" /></li>
+					<li><img src="images/thumbs/4.jpg" alt="Forth Image" /></li>
+					<li><img src="images/thumbs/5.jpg" alt="Fifth Image" /></li>
+					<li><img src="images/thumbs/6.jpg" alt="Sixth Image" /></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="footer">
+			<div class="innerFooter">
+				<span>
+					Произведения Любови Стройновой отличают утонченная элегантность, изысканность вкуса, свежесть и глубина образов, чистота линий.  Они создают впечатление оригинальности почерка личности, трепетно реагирующей на окружающий мир. Как дизайнер она начинает с главного и возможно единственно правильного, " одна женщина - одно платье" лейтмотив ее творчества. Конечно это огромная роскошь, но разве есть другой путь, чтобы остаться единственной и уникальной.
+				</span>
+			</div>
+		</div>
+
+		<!-- JavaScript -->
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+        <script type="text/javascript">
+			(function($) {
+				$.fn.parallaxSlider = function(options) {
+					var opts = $.extend({}, $.fn.parallaxSlider.defaults, options);
+					return this.each(function() {
+						var $pxs_container 	= $(this),
+						o 				= $.meta ? $.extend({}, opts, $pxs_container.data()) : opts;
+						
+						//Основной слайдер
+						var $pxs_slider		= $('.pxs_slider',$pxs_container),
+						//Элементы в слайдере
+						$elems			= $pxs_slider.children(),
+						//Общее количество элементов
+						total_elems		= $elems.length,
+						//Кнопки навигации
+						$pxs_next		= $('.pxs_next',$pxs_container),
+						$pxs_prev		= $('.pxs_prev',$pxs_container),
+						//Фоновые изображения
+						$pxs_bg1		= $('.pxs_bg1',$pxs_container),
+						$pxs_bg2		= $('.pxs_bg2',$pxs_container),
+						$pxs_bg3		= $('.pxs_bg3',$pxs_container),
+						//Текущее изображение
+						current			= 0,
+						//Контейнер миниатюр
+						$pxs_thumbnails = $('.pxs_thumbnails',$pxs_container),
+						//Миниатюры
+						$thumbs			= $pxs_thumbnails.children(),
+						//Интервал для режима автопроигрывания
+						slideshow,
+						//Загрузка изображения
+						$pxs_loading	= $('.pxs_loading',$pxs_container),
+						$pxs_slider_wrapper = $('.pxs_slider_wrapper',$pxs_container);
+							
+						//Сначала загружаем все изображения
+						var loaded		= 0,
+						$images		= $pxs_slider_wrapper.find('img');
+							
+						$images.each(function(){
+							var $img	= $(this);
+							$('<img/>').load(function(){
+								++loaded;
+								if(loaded	== total_elems*2){
+									$pxs_loading.hide();
+									$pxs_slider_wrapper.show();
+										
+									//Ширина изображения (предполагаем, что все изображения имеют одинаковые размеры)
+									var one_image_w		= $pxs_slider.find('img:first').width();
+							
+									/*
+									Нужно установить ширину слайдера, каждого из его элементов 
+									и кнопок навигации
+									 */
+									setWidths($pxs_slider,
+									$elems,
+									total_elems,
+									$pxs_bg1,
+									$pxs_bg2,
+									$pxs_bg3,
+									one_image_w,
+									$pxs_next,
+									$pxs_prev);
+							
+									/*
+										Устанавливаем ширину миниатюр
+										и распределяем их равномерно
+									 */
+									$pxs_thumbnails.css({
+										'width'			: one_image_w + 'px',
+										'margin-left' 	: -one_image_w/2 + 'px'
+									});
+									var spaces	= one_image_w/(total_elems+1);
+									$thumbs.each(function(i){
+										var $this 	= $(this);
+										var left	= spaces*(i+1) - $this.width()/2;
+										$this.css('left',left+'px');
+											
+										if(o.thumbRotation){
+											var angle 	= Math.floor(Math.random()*41)-20;
+											$this.css({
+												'-moz-transform'	: 'rotate('+ angle +'deg)',
+												'-webkit-transform'	: 'rotate('+ angle +'deg)',
+												'transform'			: 'rotate('+ angle +'deg)'
+											});
+										}
+										//При прохождении курсора над миниатюрой, она приподнимается
+										$this.bind('mouseenter',function(){
+											$(this).stop().animate({top:'-10px'},100);
+										}).bind('mouseleave',function(){
+											$(this).stop().animate({top:'0px'},100);
+										});
+									});
+										
+									//Делаем первую миниатюру выбранной
+									highlight($thumbs.eq(0));
+										
+									//Проскальзываем при нажатии кнопки навигации
+									$pxs_next.bind('click',function(){
+										++current;
+										if(current >= total_elems)
+											if(o.circular)
+												current = 0;
+										else{
+											--current;
+											return false;
+										}
+										highlight($thumbs.eq(current));
+										slide(current,
+										$pxs_slider,
+										$pxs_bg3,
+										$pxs_bg2,
+										$pxs_bg1,
+										o.speed,
+										o.easing,
+										o.easingBg);
+									});
+									$pxs_prev.bind('click',function(){
+										--current;
+										if(current < 0)
+											if(o.circular)
+												current = total_elems - 1;
+										else{
+											++current;
+											return false;
+										}
+										highlight($thumbs.eq(current));
+										slide(current,
+										$pxs_slider,
+										$pxs_bg3,
+										$pxs_bg2,
+										$pxs_bg1,
+										o.speed,
+										o.easing,
+										o.easingBg);
+									});
+							
+									/*
+									 Нажатие на миниатюру приводит к выскальзыванию соответствующего изображения
+									 */
+									$thumbs.bind('click',function(){
+										var $thumb	= $(this);
+										highlight($thumb);
+										//если включено автопроигрывание, прерываем его при нажатии кнопки мыши
+										if(o.auto)
+											clearInterval(slideshow);
+										current 	= $thumb.index();
+										slide(current,
+										$pxs_slider,
+										$pxs_bg3,
+										$pxs_bg2,
+										$pxs_bg1,
+										o.speed,
+										o.easing,
+										o.easingBg);
+									});
+							
+								
+							
+									/*
+									Активируем автопроигрывание, 
+									если установлена соответствующая опция
+									 */
+									if(o.auto != 0){
+										o.circular	= true;
+										slideshow	= setInterval(function(){
+											$pxs_next.trigger('click');
+										},o.auto);
+									}
+							
+									/*
+									При изменении размеров окна
+									нужно пересчитать ширину элементов
+									на основе новой ширины окна.
+									Нужно также передвинуть текущий элемент,
+									чтобы перерисовать левую часть.
+									 */
+									$(window).resize(function(){
+										w_w	= $(window).width();
+										setWidths($pxs_slider,$elems,total_elems,$pxs_bg1,$pxs_bg2,$pxs_bg3,one_image_w,$pxs_next,$pxs_prev);
+										slide(current,
+										$pxs_slider,
+										$pxs_bg3,
+										$pxs_bg2,
+										$pxs_bg1,
+										1,
+										o.easing,
+										o.easingBg);
+									});
+
+								}
+							}).error(function(){
+								alert('here')
+							}).attr('src',$img.attr('src'));
+						});
+							
+							
+							
+					});
+				};
+				
+				//Текущая ширина окна
+				var w_w				= $(window).width();
+				
+				var slide			= function(current,
+				$pxs_slider,
+				$pxs_bg3,
+				$pxs_bg2,
+				$pxs_bg1,
+				speed,
+				easing,
+				easingBg){
+					var slide_to	= parseInt(-w_w * current);
+					$pxs_slider.stop().animate({
+						left	: slide_to + 'px'
+					},speed, easing);
+					$pxs_bg3.stop().animate({
+						left	: slide_to/2 + 'px'
+					},speed, easingBg);
+					$pxs_bg2.stop().animate({
+						left	: slide_to/4 + 'px'
+					},speed, easingBg);
+					$pxs_bg1.stop().animate({
+						left	: slide_to/8 + 'px'
+					},speed, easingBg);
+				}
+				
+				var highlight		= function($elem){
+					$elem.siblings().removeClass('selected');
+					$elem.addClass('selected');
+				}
+				
+				var setWidths		= function($pxs_slider,
+				$elems,
+				total_elems,
+				$pxs_bg1,
+				$pxs_bg2,
+				$pxs_bg3,
+				one_image_w,
+				$pxs_next,
+				$pxs_prev){
+					/*
+					Ширина слайдера - это ширина окна умноженная на общее количество элементов в слайдере
+					 */
+					var pxs_slider_w	= w_w * total_elems;
+					$pxs_slider.width(pxs_slider_w + 'px');
+					//Каждый элемент имеет ширину равную ширине окна
+					$elems.width(w_w + 'px');
+					/*
+					Мы также устанавливаем ширину каждого изображения фона.
+					Значение также вычисляется с помощью pxs_slider
+					 */
+					$pxs_bg1.width(pxs_slider_w + 'px');
+					$pxs_bg2.width(pxs_slider_w + 'px');
+					$pxs_bg3.width(pxs_slider_w + 'px');
+					
+					/*
+					Для обеих навигационных кнопок:
+					windowWidth/2 - imgWidth/2 + небольшое поле (чтобы не касаться рамок изображений)
+					 */
+					var position_nav	= w_w/2 - one_image_w/2 + 3;
+					$pxs_next.css('right', position_nav + 'px');
+					$pxs_prev.css('left', position_nav + 'px');
+				}
+				
+				$.fn.parallaxSlider.defaults = {
+					auto			: 0,	//задержка в секундах для периодического прокурчивания контента,
+											//если значение 0 - автопрокрутка выключена
+					speed			: 1000,//скорость проскальзывания слайда
+					easing			: 'jswing',//эффект перехода для анимации
+					easingBg		: 'jswing',//эффект перехода для анимации фона
+					circular		: true,//проскальзывание по кругу
+					thumbRotation	: true//миниатюры поворачиваются случайным образом
+				};
+				//easeInOutExpo,easeInBack
+			})(jQuery);
+		</script>
+
+		<script type="text/javascript">
+			$(function() {
+				var $pxs_container	= $('#pxs_container');
+				$pxs_container.parallaxSlider();
+			});
+        </script>
+
+    </body>
+</html>
